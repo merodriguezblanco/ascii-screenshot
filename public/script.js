@@ -25,7 +25,7 @@
 
   var ScreenshotConverter = (function (canvas) {
     var context = canvas.getContext('2d'),
-        ASCII_CHARS = '#@%OHLTI)i=+;:,. '.split(''),
+        ASCII_CHARS = '@#8&OLI)i=+;:,. '.split(''),
         ASCII_CHARS_LENGTH = ASCII_CHARS.length - 1;
 
     var CANVAS_WIDTH = canvas.width,
