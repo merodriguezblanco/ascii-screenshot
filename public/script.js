@@ -36,12 +36,13 @@
       return colorPixel;
     }
 
-    var convertToASCII = function (colorize) {
-      colorize = colorize || false;
-
+    var convertToASCII = function () {
       // The canvas image data will behave as the Bitmap for the screenshot.
       var imageData = context.getImageData(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT).data,
-          asciiScreenshot = '',
+          grayscaleASCIIScreenshot = '',
+          colorASCIIScreenshot = '',
+          pixelColor = {},
+          pixelMatchingChar,
           x, y, offset, red, blue, green, pixel;
 
       // Loop through each pixel of the screenshot.
@@ -57,26 +58,28 @@
           blue = imageData[offset + 2];
           pixel = Math.max(red, green, blue) / 255;
 
-          if (colorize) {
-            var pixelColor = {
-              red: red,
-              green: green,
-              blue: blue
-            }
-
-            pixel = createColorPixel(ASCII_CHARS[parseInt(pixel * ASCII_CHARS_LENGTH, 10)], pixelColor);
-          } else {
-            pixel = ASCII_CHARS[parseInt(pixel * ASCII_CHARS_LENGTH, 10)];
+          pixelColor = {
+            red: red,
+            green: green,
+            blue: blue
           }
 
-          // Select ASCII that corresponds to grayscale and append.
-          asciiScreenshot += pixel;
+          // Select ASCII character that corresponds to pixel.
+          pixelMatchingChar = ASCII_CHARS[parseInt(pixel * ASCII_CHARS_LENGTH, 10)];
+
+          // Append grayscale and color character to image result.
+          grayscaleASCIIScreenshot += pixelMatchingChar;
+          colorASCIIScreenshot += createColorPixel(pixelMatchingChar, pixelColor);
         }
 
-        asciiScreenshot += '\n';
+        grayscaleASCIIScreenshot += '\n';
+        colorASCIIScreenshot += '\n';
       }
 
-      return asciiScreenshot;
+      return {
+        grayscale: grayscaleASCIIScreenshot,
+        color: colorASCIIScreenshot
+      };
     }
 
     var convertToColorASCII = function () {
@@ -84,8 +87,7 @@
     }
 
     return {
-      convertScreenshotToGrayscaleASCII: convertToASCII,
-      convertScreenshotToColorASCII: convertToColorASCII
+      convertScreenshotToASCII: convertToASCII,
     }
   }(canvas));
 
@@ -99,11 +101,14 @@
     video.src = (window.URL && window.URL.createObjectURL(stream)) || stream;
 
     screenshotButton.addEventListener('click', function (event) {
-      var context = canvas.getContext('2d');
+      var context = canvas.getContext('2d'),
+          asciiScreenshot;
+
       context.drawImage(video, 0, 0, video.width, video.height);
 
-      grayContainer.innerHTML = ScreenshotConverter.convertScreenshotToGrayscaleASCII();
-      colorContainer.innerHTML = ScreenshotConverter.convertScreenshotToColorASCII();
+      asciiScreenshot = ScreenshotConverter.convertScreenshotToASCII();
+      grayContainer.innerHTML = asciiScreenshot.grayscale;
+      colorContainer.innerHTML = asciiScreenshot.color;
     }, false)
   }, function (error) {
     console.log('ERROR: ', error);
