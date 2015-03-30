@@ -3,22 +3,28 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image to ASCII</title>
+    <title>Screenshot to ASCII</title>
     <link rel="stylesheet" href="/public/styles.css">
   </head>
-  <body>
+  <body class="stage-curtain">
     <main>
-      <section id="warning-section">
+      <h1>Screenshot to ASCII</h1>
+
+      <section class="warning">
       </section>
 
-      <section>
-        <video controls width="150" height="110"></video>
+      <section id="photo-booth">
+        <div id="camera">
+          <video width="150" height="110"></video>
+        </div>
         <button id="take-screenshot">Take Screenshot!</button>
       </section>
 
-      <section>
-        <pre id="grayscale-screenshot" class="ascii-screenshot"></pre>
-        <pre id="color-screenshot" class="ascii-screenshot"></pre>
+      <section id="screenshots">
+        <ul>
+          <li><pre id="grayscale-screenshot" class="ascii-screenshot"></pre></li>
+          <li><pre id="color-screenshot" class="ascii-screenshot"></pre></li>
+        </ul>
       </section>
     </main>
 
