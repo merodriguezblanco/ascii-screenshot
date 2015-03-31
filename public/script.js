@@ -21,8 +21,8 @@
         $canvas = document.createElement('canvas'),
         $video = document.querySelector('video');
 
-    $canvas.setAttribute('width', '100px');
-    $canvas.setAttribute('height', '50px');
+    $canvas.setAttribute('width', '200px');
+    $canvas.setAttribute('height', '100px');
 
     var ScreenshotConverter = (function (canvas) {
       var context = canvas.getContext('2d'),
@@ -102,7 +102,7 @@
           $screenshots = document.querySelector('.screenshots'),
           asciiScreenshot;
 
-      context.drawImage($video, 0, 0, 100, 50);
+      context.drawImage($video, 0, 0, 200, 100);
       asciiScreenshot = ScreenshotConverter.convertScreenshotToASCII();
 
       $screenshots.classList.add('visible');
