@@ -15,14 +15,14 @@
       return;
     }
 
-    var screenshotButton = document.querySelector('#take-screenshot'),
-        grayContainer = document.querySelector('#grayscale-screenshot'),
-        colorContainer = document.querySelector('#color-screenshot'),
-        canvas = document.createElement('canvas'),
-        video = document.querySelector('video');
+    var $screenshotButton = document.querySelector('.take-screenshot'),
+        $grayContainer = document.querySelector('#grayscale-screenshot'),
+        $colorContainer = document.querySelector('#color-screenshot'),
+        $canvas = document.createElement('canvas'),
+        $video = document.querySelector('video');
 
-    canvas.setAttribute('width', video.width);
-    canvas.setAttribute('height', video.height);
+    $canvas.setAttribute('width', '100px');
+    $canvas.setAttribute('height', '50px');
 
     var ScreenshotConverter = (function (canvas) {
       var context = canvas.getContext('2d'),
@@ -90,34 +90,37 @@
       return {
         convertScreenshotToASCII: convertToASCII,
       }
-    }(canvas));
+    }($canvas));
 
     var cameraOptions = {
       video: true,
       audio: false
     };
 
+    var drawScreenshots = function (event) {
+      var context = $canvas.getContext('2d'),
+          $screenshots = document.querySelector('.screenshots'),
+          asciiScreenshot;
+
+      context.drawImage($video, 0, 0, 100, 50);
+      asciiScreenshot = ScreenshotConverter.convertScreenshotToASCII();
+
+      $screenshots.classList.add('visible');
+      $grayContainer.innerHTML = asciiScreenshot.grayscale;
+      $colorContainer.innerHTML = asciiScreenshot.color;
+    }
+
     // Start getting media from camera.
     navigator.getUserMedia(cameraOptions, function (stream) {
-      video.src = (window.URL && window.URL.createObjectURL(stream)) || stream;
+      $video.src = (window.URL && window.URL.createObjectURL(stream)) || stream;
 
-      screenshotButton.addEventListener('click', function (event) {
-        var context = canvas.getContext('2d'),
-            asciiScreenshot;
-
-        context.drawImage(video, 0, 0, video.width, video.height);
-
-        asciiScreenshot = ScreenshotConverter.convertScreenshotToASCII();
-        document.querySelector('#screenshots').className = 'active';
-        grayContainer.innerHTML = asciiScreenshot.grayscale;
-        colorContainer.innerHTML = asciiScreenshot.color;
-      }, false)
+      $screenshotButton.addEventListener('click', drawScreenshots, false)
     }, function (error) {
       console.log(error);
       warningSection.innerHTML = '<p>ERROR: ' + error.name + '</p>';
     }, false);
 
-    video.play();
+    $video.play();
   }, false);
 
 }());
