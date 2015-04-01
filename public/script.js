@@ -83,10 +83,6 @@
         };
       }
 
-      var convertToColorASCII = function () {
-        return convertToASCII(true);
-      }
-
       return {
         convertScreenshotToASCII: convertToASCII,
       }
